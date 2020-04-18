@@ -269,8 +269,21 @@ Public Class frmMain
         If eAutoGeneratingColumnArgsCommon.Column.CellType = "DateTime" Then
             CType(eAutoGeneratingColumnArgsCommon.Column, GridDateTimeColumn).Pattern = DateTimePattern.Custom
             CType(eAutoGeneratingColumnArgsCommon.Column, GridDateTimeColumn).Format = "HH:mm:ss"
-            'ElseIf eAutoGeneratingColumnArgsCommon.Column.MappingName = "Sentiment" Then
-            '    CType(eAutoGeneratingColumnArgsCommon.Column, GridColumn).CellStyle.BackColor = Color.White
+        End If
+    End Sub
+
+    Private Sub sfdgvMain_QueryCellStyle(sender As Object, e As QueryCellStyleEventArgs) Handles sfdgvMain.QueryCellStyle
+        If e.Column.MappingName = "Sentiment" Then
+            If e.DisplayText = "White" Then
+                e.Style.BackColor = Color.White
+                'e.Style.TextColor = Color.White
+            ElseIf e.DisplayText = "Green" Then
+                e.Style.BackColor = Color.LightGreen
+                'e.Style.TextColor = Color.DarkSlateBlue
+            ElseIf e.DisplayText = "Red" Then
+                e.Style.BackColor = Color.IndianRed
+                'e.Style.TextColor = Color.DarkSlateBlue
+            End If
         End If
     End Sub
 
