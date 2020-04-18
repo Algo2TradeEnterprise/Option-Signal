@@ -9,7 +9,13 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="ServerName" Type="System.String" Scope="User">
-      <Value Profile="(Default)">103.57.246.210</Value>
+      <Value Profile="(Default)">localhost</Value>
+    </Setting>
+    <Setting Name="DBLocal" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="DBRemote" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>
 </SettingsFile>

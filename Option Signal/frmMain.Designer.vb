@@ -23,7 +23,7 @@ Partial Class frmMain
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmMain))
-        Me.grpMode = New System.Windows.Forms.GroupBox()
+        Me.grpHistoricalMode = New System.Windows.Forms.GroupBox()
         Me.rdbWithoutAPI = New System.Windows.Forms.RadioButton()
         Me.rdbWithAPI = New System.Windows.Forms.RadioButton()
         Me.btnStop = New System.Windows.Forms.Button()
@@ -33,28 +33,33 @@ Partial Class frmMain
         Me.lblDuration = New System.Windows.Forms.Label()
         Me.lblTime = New System.Windows.Forms.Label()
         Me.btnSettings = New System.Windows.Forms.Button()
-        Me.grpMode.SuspendLayout()
+        Me.grpDatabaseMode = New System.Windows.Forms.GroupBox()
+        Me.rdbRemote = New System.Windows.Forms.RadioButton()
+        Me.rdbLocal = New System.Windows.Forms.RadioButton()
+        Me.lblNumberOfStock = New System.Windows.Forms.Label()
+        Me.grpHistoricalMode.SuspendLayout()
         CType(Me.sfdgvMain, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.grpDatabaseMode.SuspendLayout()
         Me.SuspendLayout()
         '
-        'grpMode
+        'grpHistoricalMode
         '
-        Me.grpMode.Controls.Add(Me.rdbWithoutAPI)
-        Me.grpMode.Controls.Add(Me.rdbWithAPI)
-        Me.grpMode.Location = New System.Drawing.Point(3, 2)
-        Me.grpMode.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
-        Me.grpMode.Name = "grpMode"
-        Me.grpMode.Padding = New System.Windows.Forms.Padding(3, 2, 3, 2)
-        Me.grpMode.Size = New System.Drawing.Size(207, 65)
-        Me.grpMode.TabIndex = 28
-        Me.grpMode.TabStop = False
-        Me.grpMode.Text = "Mode"
+        Me.grpHistoricalMode.Controls.Add(Me.rdbWithoutAPI)
+        Me.grpHistoricalMode.Controls.Add(Me.rdbWithAPI)
+        Me.grpHistoricalMode.Location = New System.Drawing.Point(3, 2)
+        Me.grpHistoricalMode.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+        Me.grpHistoricalMode.Name = "grpHistoricalMode"
+        Me.grpHistoricalMode.Padding = New System.Windows.Forms.Padding(3, 2, 3, 2)
+        Me.grpHistoricalMode.Size = New System.Drawing.Size(216, 65)
+        Me.grpHistoricalMode.TabIndex = 28
+        Me.grpHistoricalMode.TabStop = False
+        Me.grpHistoricalMode.Text = "Historical Mode"
         '
         'rdbWithoutAPI
         '
         Me.rdbWithoutAPI.AutoSize = True
         Me.rdbWithoutAPI.Checked = True
-        Me.rdbWithoutAPI.Location = New System.Drawing.Point(93, 25)
+        Me.rdbWithoutAPI.Location = New System.Drawing.Point(97, 25)
         Me.rdbWithoutAPI.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
         Me.rdbWithoutAPI.Name = "rdbWithoutAPI"
         Me.rdbWithoutAPI.Size = New System.Drawing.Size(102, 21)
@@ -66,7 +71,7 @@ Partial Class frmMain
         'rdbWithAPI
         '
         Me.rdbWithAPI.AutoSize = True
-        Me.rdbWithAPI.Location = New System.Drawing.Point(5, 25)
+        Me.rdbWithAPI.Location = New System.Drawing.Point(9, 25)
         Me.rdbWithAPI.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
         Me.rdbWithAPI.Name = "rdbWithAPI"
         Me.rdbWithAPI.Size = New System.Drawing.Size(82, 21)
@@ -129,7 +134,7 @@ Partial Class frmMain
         'lblDuration
         '
         Me.lblDuration.AutoSize = True
-        Me.lblDuration.Location = New System.Drawing.Point(237, 30)
+        Me.lblDuration.Location = New System.Drawing.Point(460, 17)
         Me.lblDuration.Name = "lblDuration"
         Me.lblDuration.Size = New System.Drawing.Size(164, 17)
         Me.lblDuration.TabIndex = 36
@@ -138,7 +143,7 @@ Partial Class frmMain
         'lblTime
         '
         Me.lblTime.AutoSize = True
-        Me.lblTime.Location = New System.Drawing.Point(460, 30)
+        Me.lblTime.Location = New System.Drawing.Point(460, 42)
         Me.lblTime.Name = "lblTime"
         Me.lblTime.Size = New System.Drawing.Size(189, 17)
         Me.lblTime.TabIndex = 37
@@ -147,7 +152,7 @@ Partial Class frmMain
         'btnSettings
         '
         Me.btnSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnSettings.Location = New System.Drawing.Point(757, 17)
+        Me.btnSettings.Location = New System.Drawing.Point(901, 17)
         Me.btnSettings.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
         Me.btnSettings.Name = "btnSettings"
         Me.btnSettings.Size = New System.Drawing.Size(145, 39)
@@ -155,11 +160,59 @@ Partial Class frmMain
         Me.btnSettings.Text = "Settings"
         Me.btnSettings.UseVisualStyleBackColor = True
         '
+        'grpDatabaseMode
+        '
+        Me.grpDatabaseMode.Controls.Add(Me.rdbRemote)
+        Me.grpDatabaseMode.Controls.Add(Me.rdbLocal)
+        Me.grpDatabaseMode.Location = New System.Drawing.Point(225, 2)
+        Me.grpDatabaseMode.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+        Me.grpDatabaseMode.Name = "grpDatabaseMode"
+        Me.grpDatabaseMode.Padding = New System.Windows.Forms.Padding(3, 2, 3, 2)
+        Me.grpDatabaseMode.Size = New System.Drawing.Size(207, 65)
+        Me.grpDatabaseMode.TabIndex = 39
+        Me.grpDatabaseMode.TabStop = False
+        Me.grpDatabaseMode.Text = "Database Mode"
+        '
+        'rdbRemote
+        '
+        Me.rdbRemote.AutoSize = True
+        Me.rdbRemote.Location = New System.Drawing.Point(100, 25)
+        Me.rdbRemote.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+        Me.rdbRemote.Name = "rdbRemote"
+        Me.rdbRemote.Size = New System.Drawing.Size(78, 21)
+        Me.rdbRemote.TabIndex = 1
+        Me.rdbRemote.Text = "Remote"
+        Me.rdbRemote.UseVisualStyleBackColor = True
+        '
+        'rdbLocal
+        '
+        Me.rdbLocal.AutoSize = True
+        Me.rdbLocal.Checked = True
+        Me.rdbLocal.Location = New System.Drawing.Point(12, 25)
+        Me.rdbLocal.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+        Me.rdbLocal.Name = "rdbLocal"
+        Me.rdbLocal.Size = New System.Drawing.Size(63, 21)
+        Me.rdbLocal.TabIndex = 0
+        Me.rdbLocal.TabStop = True
+        Me.rdbLocal.Text = "Local"
+        Me.rdbLocal.UseVisualStyleBackColor = True
+        '
+        'lblNumberOfStock
+        '
+        Me.lblNumberOfStock.AutoSize = True
+        Me.lblNumberOfStock.Location = New System.Drawing.Point(675, 42)
+        Me.lblNumberOfStock.Name = "lblNumberOfStock"
+        Me.lblNumberOfStock.Size = New System.Drawing.Size(132, 17)
+        Me.lblNumberOfStock.TabIndex = 40
+        Me.lblNumberOfStock.Text = "Number Of Stock: 0"
+        '
         'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1371, 629)
+        Me.Controls.Add(Me.lblNumberOfStock)
+        Me.Controls.Add(Me.grpDatabaseMode)
         Me.Controls.Add(Me.btnSettings)
         Me.Controls.Add(Me.lblTime)
         Me.Controls.Add(Me.lblDuration)
@@ -167,21 +220,23 @@ Partial Class frmMain
         Me.Controls.Add(Me.lblProgress)
         Me.Controls.Add(Me.btnStop)
         Me.Controls.Add(Me.btnStart)
-        Me.Controls.Add(Me.grpMode)
+        Me.Controls.Add(Me.grpHistoricalMode)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
         Me.Name = "frmMain"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Signal Me"
-        Me.grpMode.ResumeLayout(False)
-        Me.grpMode.PerformLayout()
+        Me.grpHistoricalMode.ResumeLayout(False)
+        Me.grpHistoricalMode.PerformLayout()
         CType(Me.sfdgvMain, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.grpDatabaseMode.ResumeLayout(False)
+        Me.grpDatabaseMode.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
     End Sub
 
-    Friend WithEvents grpMode As GroupBox
+    Friend WithEvents grpHistoricalMode As GroupBox
     Friend WithEvents rdbWithoutAPI As RadioButton
     Friend WithEvents rdbWithAPI As RadioButton
     Friend WithEvents btnStop As Button
@@ -192,4 +247,8 @@ Partial Class frmMain
     Friend WithEvents lblDuration As Label
     Friend WithEvents lblTime As Label
     Friend WithEvents btnSettings As Button
+    Friend WithEvents grpDatabaseMode As GroupBox
+    Friend WithEvents rdbRemote As RadioButton
+    Friend WithEvents rdbLocal As RadioButton
+    Friend WithEvents lblNumberOfStock As Label
 End Class

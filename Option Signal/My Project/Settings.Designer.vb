@@ -80,13 +80,37 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("103.57.246.210")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("localhost")>  _
         Public Property ServerName() As String
             Get
                 Return CType(Me("ServerName"),String)
             End Get
             Set
                 Me("ServerName") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property DBLocal() As Boolean
+            Get
+                Return CType(Me("DBLocal"),Boolean)
+            End Get
+            Set
+                Me("DBLocal") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
+        Public Property DBRemote() As Boolean
+            Get
+                Return CType(Me("DBRemote"),Boolean)
+            End Get
+            Set
+                Me("DBRemote") = value
             End Set
         End Property
     End Class

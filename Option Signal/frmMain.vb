@@ -307,6 +307,8 @@ Public Class frmMain
 
         rdbWithAPI.Checked = My.Settings.WithAPI
         rdbWithoutAPI.Checked = My.Settings.WithoutAPI
+        rdbLocal.Checked = My.Settings.DBLocal
+        rdbRemote.Checked = My.Settings.DBRemote
 
         'Dim columnNames As String = String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21},{22},{23},{24}",
         '                                         "Instrument Name", "LastUpdateTime", "LTP", "Change %", "ATR %", "Slab",
@@ -317,6 +319,7 @@ Public Class frmMain
     End Sub
 
     Private Async Sub btnStart_Click(sender As Object, e As EventArgs) Handles btnStart.Click
+        SetLabelText_ThreadSafe(lblNumberOfStock, String.Format("Number Of Stock: {0}", 0))
         SetLabelText_ThreadSafe(lblDuration, String.Format("Last Iteration Duration: {0}", 0))
         SetLabelText_ThreadSafe(lblTime, String.Format("Last Iteration Time: {0}", "00:00:00"))
         SetSFGridDataBind_ThreadSafe(sfdgvMain, Nothing)
@@ -324,10 +327,18 @@ Public Class frmMain
         SetObjectEnableDisable_ThreadSafe(btnSettings, False)
         SetObjectEnableDisable_ThreadSafe(btnStart, False)
         SetObjectEnableDisable_ThreadSafe(btnStop, True)
-        SetObjectEnableDisable_ThreadSafe(grpMode, False)
+        SetObjectEnableDisable_ThreadSafe(grpHistoricalMode, False)
+        SetObjectEnableDisable_ThreadSafe(grpDatabaseMode, False)
 
         My.Settings.WithAPI = rdbWithAPI.Checked
         My.Settings.WithoutAPI = rdbWithoutAPI.Checked
+        My.Settings.DBLocal = rdbLocal.Checked
+        My.Settings.DBRemote = rdbRemote.Checked
+        If rdbLocal.Checked Then
+            My.Settings.ServerName = "localhost"
+        ElseIf rdbRemote.Checked Then
+            My.Settings.ServerName = "103.57.246.210"
+        End If
         My.Settings.Save()
 
         canceller = New CancellationTokenSource
@@ -347,11 +358,14 @@ Public Class frmMain
                 Throw New ApplicationException("Settings file not found. Please complete your settings properly.")
             End If
             If settings IsNot Nothing Then
+                canceller.Token.ThrowIfCancellationRequested()
                 Dim tradingDate As Date = Now.Date
                 Dim workableStockList As List(Of InstrumentDetails) = Nothing
                 Dim allStockList As Dictionary(Of String, List(Of Date)) = Await GetFutureStockListAsync(tradingDate.Date).ConfigureAwait(False)
+                canceller.Token.ThrowIfCancellationRequested()
                 Dim cashStockList As Dictionary(Of String, String) = Await GetCashStockListAsync(tradingDate.Date).ConfigureAwait(False)
 
+                canceller.Token.ThrowIfCancellationRequested()
                 OnHeartbeat("Getting banned stock list. Please wait...")
                 Dim bannedStockFileName As String = Path.Combine(My.Application.Info.DirectoryPath, String.Format("Bannned Stocks {0}.csv", tradingDate.ToString("ddMMyyyy")))
                 For Each runningFile In Directory.GetFiles(My.Application.Info.DirectoryPath, "Bannned Stocks *.csv")
@@ -363,6 +377,7 @@ Public Class frmMain
                     bannedStockList = Await bannedStock.GetBannedStocksData(tradingDate).ConfigureAwait(False)
                 End Using
 
+                canceller.Token.ThrowIfCancellationRequested()
                 OnHeartbeat("Getting ATR stock list. Please wait...")
                 Dim atrStockList As Dictionary(Of String, Decimal()) = Nothing
                 Using stkSlctn As New StockSelection(canceller, settings, tradingDate)
@@ -375,6 +390,7 @@ Public Class frmMain
                     atrStockList IsNot Nothing AndAlso atrStockList.Count > 0 Then
                     Dim ctr As Integer = 0
                     For Each runningStock In allStockList
+                        canceller.Token.ThrowIfCancellationRequested()
                         ctr += 1
                         OnHeartbeat(String.Format("Getting option stocklist for {0}. #{1}/{2}", runningStock.Key, ctr, allStockList.Count))
                         Dim cashStockName As String = runningStock.Key
@@ -384,15 +400,19 @@ Public Class frmMain
                             Dim optionStockList As Dictionary(Of String, OptionInstrumentDetails) = Nothing
                             If runningStock.Value IsNot Nothing AndAlso runningStock.Value.Count > 0 Then
                                 For Each runningExpiry In runningStock.Value
+                                    canceller.Token.ThrowIfCancellationRequested()
                                     Dim runningExpiryStockList As Dictionary(Of String, OptionInstrumentDetails) = Await GetOptionStockListAsync(runningStock.Key, tradingDate.Date, runningExpiry).ConfigureAwait(False)
+                                    canceller.Token.ThrowIfCancellationRequested()
                                     If runningExpiryStockList IsNot Nothing AndAlso runningExpiryStockList.Count > 0 Then
                                         For Each runningExpiryStock In runningExpiryStockList
+                                            canceller.Token.ThrowIfCancellationRequested()
                                             If optionStockList Is Nothing Then optionStockList = New Dictionary(Of String, OptionInstrumentDetails)
                                             optionStockList.Add(runningExpiryStock.Key, runningExpiryStock.Value)
                                         Next
                                     End If
                                 Next
                             End If
+                            canceller.Token.ThrowIfCancellationRequested()
                             If optionStockList IsNot Nothing AndAlso optionStockList.Count > 0 Then
                                 Dim workingInstrument As InstrumentDetails = New InstrumentDetails(settings) With {
                                     .OriginatingInstrument = runningStock.Key,
@@ -411,12 +431,14 @@ Public Class frmMain
                 End If
                 OnHeartbeat("Processing Data")
                 If workableStockList IsNot Nothing AndAlso workableStockList.Count > 0 Then
+                    SetLabelText_ThreadSafe(lblNumberOfStock, String.Format("Number Of Stock: {0}", workableStockList.Count))
                     Dim dashboardList As BindingList(Of InstrumentDetails) = New BindingList(Of InstrumentDetails)(workableStockList)
                     SetSFGridDataBind_ThreadSafe(sfdgvMain, dashboardList)
                     SetSFGridFreezFirstColumn_ThreadSafe(sfdgvMain)
 
                     Dim sw As Stopwatch = New Stopwatch
                     While True
+                        canceller.Token.ThrowIfCancellationRequested()
                         Try
                             sw.Reset()
                             sw.Start()
@@ -447,7 +469,7 @@ Public Class frmMain
                                 End If
                             Next
                             sw.Stop()
-                            SetLabelText_ThreadSafe(lblDuration, String.Format("Last Iteration Duration (sec): {0}", Math.Ceiling(sw.Elapsed.TotalSeconds)))
+                            SetLabelText_ThreadSafe(lblDuration, String.Format("Last Iteration Duration (sec): {0}", TimeSpan.FromSeconds(sw.Elapsed.TotalSeconds).ToString("hh\:mm\:ss")))
                             SetLabelText_ThreadSafe(lblTime, String.Format("Last Iteration Time: {0}", Now.ToString("HH:mm:ss")))
                         Catch cex As TaskCanceledException
                             Throw cex
@@ -468,7 +490,8 @@ Public Class frmMain
             SetObjectEnableDisable_ThreadSafe(btnSettings, True)
             SetObjectEnableDisable_ThreadSafe(btnStart, True)
             SetObjectEnableDisable_ThreadSafe(btnStop, False)
-            SetObjectEnableDisable_ThreadSafe(grpMode, True)
+            SetObjectEnableDisable_ThreadSafe(grpHistoricalMode, True)
+            SetObjectEnableDisable_ThreadSafe(grpDatabaseMode, True)
             OnHeartbeat("Process Complete")
         End Try
     End Function
@@ -490,6 +513,7 @@ Public Class frmMain
             If dt IsNot Nothing AndAlso dt.Rows.Count > 0 Then
                 Dim allStock As Dictionary(Of String, Date) = Nothing
                 For i = 0 To dt.Rows.Count - 1
+                    canceller.Token.ThrowIfCancellationRequested()
                     If Not IsDBNull(dt.Rows(i).Item(0)) AndAlso Not IsDBNull(dt.Rows(i).Item(1)) Then
                         Dim tradingSymbol As String = dt.Rows(i).Item(0).ToString.ToUpper
                         Dim expiry As Date = Convert.ToDateTime(dt.Rows(i).Item(1))
@@ -504,6 +528,7 @@ Public Class frmMain
                 If allStock IsNot Nothing AndAlso allStock.Count > 0 Then
 
                     For Each runningStock In allStock
+                        canceller.Token.ThrowIfCancellationRequested()
                         If ret Is Nothing Then ret = New Dictionary(Of String, List(Of Date))
                         Dim intrumentName As String = runningStock.Key.Remove(runningStock.Key.Count - 8)
                         If Not ret.ContainsKey(intrumentName) Then

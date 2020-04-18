@@ -184,6 +184,8 @@ Public Class StockSelection
                             Dim slab As Decimal = CalculateSlab(stockData.Value.Close, stockData.Value.Close * stockData.Value.ATR)
                             If ret Is Nothing Then ret = New Dictionary(Of String, Decimal())
                             ret.Add(stockData.Key, {stockData.Value.ATR, slab})
+                            stockCounter += 1
+                            If stockCounter >= _settings.NumberOfStock Then Exit For
                         Next
                     End If
                 End If

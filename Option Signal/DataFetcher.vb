@@ -95,21 +95,7 @@ Public Class DataFetcher
                         _instrument.PreviousClose = eodData.LastOrDefault.Value.PreviousPayload.Close
                         _instrument.NotifyPropertyChanged("PreviousClose")
                     End If
-
-                    'Dim atrPayload As Dictionary(Of Date, Decimal) = Nothing
-                    'CalculateATR(14, eodData, atrPayload)
-                    'If atrPayload IsNot Nothing AndAlso atrPayload.ContainsKey(_instrument.PreviousDay) Then
-                    '    Dim atr As Decimal = atrPayload(_instrument.PreviousDay)
-
-                    '    _instrument.ATR = Math.Round((atr / _instrument.PreviousClose) * 100, 2)
-                    '    _instrument.NotifyPropertyChanged("ATR")
-
-                    '    _instrument.Slab = CalculateSlab(_instrument.PreviousClose, atr)
-                    '    _instrument.NotifyPropertyChanged("Slab")
-                    'End If
                 End If
-
-
 
                 If _instrument.OptionInstruments IsNot Nothing AndAlso _instrument.OptionInstruments.Count > 0 Then
                     Try
@@ -127,7 +113,9 @@ Public Class DataFetcher
                                                                                                                      Return True
                                                                                                                  End Function)
 
+                            _cts.Token.ThrowIfCancellationRequested()
                             Dim mainTask As Task = Task.WhenAll(tasks)
+                            _cts.Token.ThrowIfCancellationRequested()
                             Await mainTask.ConfigureAwait(False)
                             If mainTask.Exception IsNot Nothing Then
                                 Throw mainTask.Exception
@@ -143,6 +131,7 @@ Public Class DataFetcher
                 End If
 
                 If _instrument.PEInstrumentsPayloads IsNot Nothing AndAlso _instrument.PEInstrumentsPayloads.Count > 0 Then
+                    _cts.Token.ThrowIfCancellationRequested()
                     Dim sumOfPutOI As Decimal = _instrument.PEInstrumentsPayloads.Sum(Function(x)
                                                                                           Return x.Value.OI
                                                                                       End Function)
@@ -167,6 +156,7 @@ Public Class DataFetcher
                 End If
 
                 If _instrument.CEInstrumentsPayloads IsNot Nothing AndAlso _instrument.CEInstrumentsPayloads.Count > 0 Then
+                    _cts.Token.ThrowIfCancellationRequested()
                     Dim sumOfCallOI As Decimal = _instrument.CEInstrumentsPayloads.Sum(Function(x)
                                                                                            Return x.Value.OI
                                                                                        End Function)
@@ -214,8 +204,9 @@ Public Class DataFetcher
         End If
     End Function
 
-    Public Shared Async Function GetHistoricalDataAsync(ByVal instrumentToken As String, ByVal tradingSymbol As String, ByVal startDate As Date, ByVal endDate As Date, ByVal typeOfData As DataType,
+    Public Async Function GetHistoricalDataAsync(ByVal instrumentToken As String, ByVal tradingSymbol As String, ByVal startDate As Date, ByVal endDate As Date, ByVal typeOfData As DataType,
                                                         ByVal zerodhaDetails As ZerodhaLogin, ByVal fetchDataWithAPI As Boolean, ByVal fetchDataWithoutAPI As Boolean, ByVal canceller As CancellationTokenSource) As Task(Of Dictionary(Of Date, Payload))
+        canceller.Token.ThrowIfCancellationRequested()
         Dim ret As Dictionary(Of Date, Payload) = Nothing
         Dim AWSZerodhaEODHistoricalURL As String = "https://kitecharts-aws.zerodha.com/api/chart/{0}/day?oi=1&api_key=kitefront&access_token=K&from={1}&to={2}"
         Dim AWSZerodhaIntradayHistoricalURL As String = "https://kitecharts-aws.zerodha.com/api/chart/{0}/minute?oi=1&api_key=kitefront&access_token=K&from={1}&to={2}"
@@ -236,6 +227,7 @@ Public Class DataFetcher
                     ZerodhaHistoricalURL = AWSZerodhaIntradayHistoricalURL
                 End If
         End Select
+        canceller.Token.ThrowIfCancellationRequested()
         If ZerodhaHistoricalURL IsNot Nothing AndAlso instrumentToken IsNot Nothing AndAlso instrumentToken <> "" Then
             Dim historicalDataURL As String = String.Format(ZerodhaHistoricalURL, instrumentToken, startDate.ToString("yyyy-MM-dd"), endDate.ToString("yyyy-MM-dd"))
             'OnHeartbeat(String.Format("Fetching historical Data: {0}", historicalDataURL))
@@ -339,64 +331,6 @@ Public Class DataFetcher
                         ret.Add(runningSnapshotTime, runningPayload)
                         previousPayload = runningPayload
                     Next
-                End If
-            End If
-        End If
-        Return ret
-    End Function
-
-    Private Sub CalculateATR(ByVal ATRPeriod As Integer, ByVal inputPayload As Dictionary(Of Date, Payload), ByRef outputPayload As Dictionary(Of Date, Decimal))
-        If inputPayload IsNot Nothing AndAlso inputPayload.Count > 0 Then
-            Dim firstPayload As Boolean = True
-            Dim HighLow As Double = Nothing
-            Dim HighClose As Double = Nothing
-            Dim LowClose As Double = Nothing
-            Dim PreviousClose As Double = Nothing
-            Dim TR As Double = Nothing
-            Dim SumTR As Double = 0.00
-            Dim AvgTR As Double = 0.00
-            Dim counter As Integer = 0
-            outputPayload = New Dictionary(Of Date, Decimal)
-            For Each runningInputPayload In inputPayload
-                counter += 1
-                HighLow = runningInputPayload.Value.High - runningInputPayload.Value.Low
-                If firstPayload = True Then
-                    TR = HighLow
-                    firstPayload = False
-                Else
-                    HighClose = Math.Abs(runningInputPayload.Value.High - runningInputPayload.Value.PreviousPayload.Close)
-                    LowClose = Math.Abs(runningInputPayload.Value.Low - runningInputPayload.Value.PreviousPayload.Close)
-                    TR = Math.Max(HighLow, Math.Max(HighClose, LowClose))
-                End If
-                SumTR = SumTR + TR
-                If counter = ATRPeriod Then
-                    AvgTR = SumTR / ATRPeriod
-                    outputPayload.Add(runningInputPayload.Value.PayloadDate, AvgTR)
-                ElseIf counter > ATRPeriod Then
-                    AvgTR = (outputPayload(runningInputPayload.Value.PreviousPayload.PayloadDate) * (ATRPeriod - 1) + TR) / ATRPeriod
-                    outputPayload.Add(runningInputPayload.Value.PayloadDate, AvgTR)
-                Else
-                    AvgTR = SumTR / counter
-                    outputPayload.Add(runningInputPayload.Value.PayloadDate, AvgTR)
-                End If
-            Next
-        End If
-    End Sub
-
-    Private Function CalculateSlab(ByVal price As Decimal, ByVal atr As Decimal) As Decimal
-        Dim ret As Decimal = 0.25
-        Dim slabList As List(Of Decimal) = New List(Of Decimal) From {0.25, 0.5, 1, 2.5, 5, 10, 25}
-        Dim supportedSlabList As List(Of Decimal) = slabList.FindAll(Function(x)
-                                                                         Return x <= atr / 8
-                                                                     End Function)
-        If supportedSlabList IsNot Nothing AndAlso supportedSlabList.Count > 0 Then
-            ret = supportedSlabList.Max
-            If price * 1 / 100 < ret Then
-                Dim newSupportedSlabList As List(Of Decimal) = supportedSlabList.FindAll(Function(x)
-                                                                                             Return x <= price * 1 / 100
-                                                                                         End Function)
-                If newSupportedSlabList IsNot Nothing AndAlso newSupportedSlabList.Count > 0 Then
-                    ret = newSupportedSlabList.Max
                 End If
             End If
         End If
