@@ -37,6 +37,7 @@ Partial Class frmMain
         Me.rdbRemote = New System.Windows.Forms.RadioButton()
         Me.rdbLocal = New System.Windows.Forms.RadioButton()
         Me.lblNumberOfStock = New System.Windows.Forms.Label()
+        Me.btnExport = New System.Windows.Forms.Button()
         Me.grpHistoricalMode.SuspendLayout()
         CType(Me.sfdgvMain, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.grpDatabaseMode.SuspendLayout()
@@ -107,7 +108,7 @@ Partial Class frmMain
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblProgress.Location = New System.Drawing.Point(0, 581)
         Me.lblProgress.Name = "lblProgress"
-        Me.lblProgress.Size = New System.Drawing.Size(1448, 44)
+        Me.lblProgress.Size = New System.Drawing.Size(1221, 44)
         Me.lblProgress.TabIndex = 31
         Me.lblProgress.Text = "Progress Status"
         '
@@ -206,11 +207,23 @@ Partial Class frmMain
         Me.lblNumberOfStock.TabIndex = 40
         Me.lblNumberOfStock.Text = "Number Of Stock: 0"
         '
+        'btnExport
+        '
+        Me.btnExport.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnExport.Location = New System.Drawing.Point(1227, 584)
+        Me.btnExport.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+        Me.btnExport.Name = "btnExport"
+        Me.btnExport.Size = New System.Drawing.Size(139, 39)
+        Me.btnExport.TabIndex = 41
+        Me.btnExport.Text = "Export"
+        Me.btnExport.UseVisualStyleBackColor = True
+        '
         'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1371, 629)
+        Me.Controls.Add(Me.btnExport)
         Me.Controls.Add(Me.lblNumberOfStock)
         Me.Controls.Add(Me.grpDatabaseMode)
         Me.Controls.Add(Me.btnSettings)
@@ -251,4 +264,5 @@ Partial Class frmMain
     Friend WithEvents rdbRemote As RadioButton
     Friend WithEvents rdbLocal As RadioButton
     Friend WithEvents lblNumberOfStock As Label
+    Friend WithEvents btnExport As Button
 End Class

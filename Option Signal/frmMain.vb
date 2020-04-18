@@ -6,6 +6,7 @@ Imports System.ComponentModel
 Imports Syncfusion.WinForms.DataGrid
 Imports Syncfusion.WinForms.DataGrid.Events
 Imports Syncfusion.WinForms.Input.Enums
+Imports Syncfusion.WinForms.DataGridConverter
 Imports NLog
 Imports System.Runtime.Serialization.Formatters.Binary
 
@@ -272,19 +273,33 @@ Public Class frmMain
         End If
     End Sub
 
-    Private Sub sfdgvMain_QueryCellStyle(sender As Object, e As QueryCellStyleEventArgs) Handles sfdgvMain.QueryCellStyle
-        If e.Column.MappingName = "Sentiment" Then
-            If e.DisplayText = "White" Then
-                e.Style.BackColor = Color.White
-                'e.Style.TextColor = Color.White
-            ElseIf e.DisplayText = "Green" Then
+    'Private Sub sfdgvMain_QueryCellStyle(sender As Object, e As QueryCellStyleEventArgs) Handles sfdgvMain.QueryCellStyle
+    '    If e.Column.MappingName = "Sentiment" Then
+    '        If e.DisplayText = "White" Then
+    '            e.Style.BackColor = Color.White
+    '            'e.Style.TextColor = Color.White
+    '        ElseIf e.DisplayText = "Green" Then
+    '            e.Style.BackColor = Color.LightGreen
+    '            'e.Style.TextColor = Color.DarkSlateBlue
+    '        ElseIf e.DisplayText = "Red" Then
+    '            e.Style.BackColor = Color.IndianRed
+    '            'e.Style.TextColor = Color.DarkSlateBlue
+    '        End If
+    '    End If
+    'End Sub
+
+    Private Sub sfdgvMain_QueryRowStyle(sender As Object, e As QueryRowStyleEventArgs) Handles sfdgvMain.QueryRowStyle
+        'If e.RowType = RowType.DefaultRow Then
+        If e.RowData IsNot Nothing Then
+            If (TryCast(e.RowData, InstrumentDetails)).Sentiment = "Green" Then
                 e.Style.BackColor = Color.LightGreen
-                'e.Style.TextColor = Color.DarkSlateBlue
-            ElseIf e.DisplayText = "Red" Then
-                e.Style.BackColor = Color.IndianRed
-                'e.Style.TextColor = Color.DarkSlateBlue
+            ElseIf (TryCast(e.RowData, InstrumentDetails)).Sentiment = "Red" Then
+                e.Style.BackColor = Color.Red
+            ElseIf (TryCast(e.RowData, InstrumentDetails)).Sentiment = "White" Then
+                e.Style.BackColor = Color.White
             End If
         End If
+        'End If
     End Sub
 
     Private Sub sfdgvMain_FilterPopupShowing(sender As Object, e As FilterPopupShowingEventArgs) Handles sfdgvMain.FilterPopupShowing
@@ -306,6 +321,21 @@ Public Class frmMain
         eFilterPopupShowingEventArgsCommon.Control.OkButton.ForeColor = eFilterPopupShowingEventArgsCommon.Control.CancelButton.ForeColor
     End Sub
 
+    Private Sub btnExport_Click(sender As Object, e As EventArgs) Handles btnExport.Click
+        If sfdgvMain IsNot Nothing AndAlso sfdgvMain.DataSource IsNot Nothing Then
+            Dim options = New ExcelExportingOptions()
+            Dim excelEngine = sfdgvMain.ExportToExcel(sfdgvMain.View, options)
+            Dim workBook = excelEngine.Excel.Workbooks(0)
+            Dim filename As String = Path.Combine(My.Application.Info.DirectoryPath, String.Format("Option Signal {0}.xlsx", Now.ToString("ddMMyyyy HH_mm_ss")))
+            workBook.SaveAs(filename)
+            If MessageBox.Show("Export successful. Do you want to open?", "Option Signal Export", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+                Process.Start(filename)
+            End If
+        Else
+            MessageBox.Show("Can not export as there is no data", "Option Signal Export", MessageBoxButtons.OK, MessageBoxIcon.Hand)
+        End If
+    End Sub
+
     Private Sub btnSettings_Click(sender As Object, e As EventArgs) Handles btnSettings.Click
         Dim frm As New frmSettings
         frm.ShowDialog()
@@ -317,6 +347,7 @@ Public Class frmMain
 
     Private Sub frmMain_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         SetObjectEnableDisable_ThreadSafe(btnStop, False)
+        SetObjectEnableDisable_ThreadSafe(btnExport, False)
 
         rdbWithAPI.Checked = My.Settings.WithAPI
         rdbWithoutAPI.Checked = My.Settings.WithoutAPI
@@ -340,6 +371,7 @@ Public Class frmMain
         SetObjectEnableDisable_ThreadSafe(btnSettings, False)
         SetObjectEnableDisable_ThreadSafe(btnStart, False)
         SetObjectEnableDisable_ThreadSafe(btnStop, True)
+        SetObjectEnableDisable_ThreadSafe(btnExport, True)
         SetObjectEnableDisable_ThreadSafe(grpHistoricalMode, False)
         SetObjectEnableDisable_ThreadSafe(grpDatabaseMode, False)
 
