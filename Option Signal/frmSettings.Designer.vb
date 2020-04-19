@@ -28,6 +28,14 @@ Partial Class frmSettings
         Me.btnSaveMomentumReversalSettings = New System.Windows.Forms.Button()
         Me.tabMain = New System.Windows.Forms.TabControl()
         Me.tabOthers = New System.Windows.Forms.TabPage()
+        Me.txtRatioUpperValue = New System.Windows.Forms.TextBox()
+        Me.lblRatioUpperValue = New System.Windows.Forms.Label()
+        Me.txtRatioLowerValue = New System.Windows.Forms.TextBox()
+        Me.lblRatioLowerValue = New System.Windows.Forms.Label()
+        Me.txtOptionStockParallelHit = New System.Windows.Forms.TextBox()
+        Me.lblOptionStockParallelHit = New System.Windows.Forms.Label()
+        Me.txtMainStockParallelHit = New System.Windows.Forms.TextBox()
+        Me.lblMainStockParallelHit = New System.Windows.Forms.Label()
         Me.tabStockSelection = New System.Windows.Forms.TabPage()
         Me.txtBlankCandlePercentage = New System.Windows.Forms.TextBox()
         Me.lblBlankCandlePercentage = New System.Windows.Forms.Label()
@@ -39,14 +47,8 @@ Partial Class frmSettings
         Me.lblMaxPrice = New System.Windows.Forms.Label()
         Me.txtMinPrice = New System.Windows.Forms.TextBox()
         Me.lblMinPrice = New System.Windows.Forms.Label()
-        Me.txtRatioUpperValue = New System.Windows.Forms.TextBox()
-        Me.lblRatioUpperValue = New System.Windows.Forms.Label()
-        Me.txtRatioLowerValue = New System.Windows.Forms.TextBox()
-        Me.lblRatioLowerValue = New System.Windows.Forms.Label()
-        Me.txtOptionStockParallelHit = New System.Windows.Forms.TextBox()
-        Me.lblOptionStockParallelHit = New System.Windows.Forms.Label()
-        Me.txtMainStockParallelHit = New System.Windows.Forms.TextBox()
-        Me.lblMainStockParallelHit = New System.Windows.Forms.Label()
+        Me.lblOnlyWithCurrentExpiryContract = New System.Windows.Forms.Label()
+        Me.chkbOnlyWithCurrentExpiryContract = New System.Windows.Forms.CheckBox()
         Me.tabMain.SuspendLayout()
         Me.tabOthers.SuspendLayout()
         Me.tabStockSelection.SuspendLayout()
@@ -84,6 +86,8 @@ Partial Class frmSettings
         '
         'tabOthers
         '
+        Me.tabOthers.Controls.Add(Me.chkbOnlyWithCurrentExpiryContract)
+        Me.tabOthers.Controls.Add(Me.lblOnlyWithCurrentExpiryContract)
         Me.tabOthers.Controls.Add(Me.txtRatioUpperValue)
         Me.tabOthers.Controls.Add(Me.lblRatioUpperValue)
         Me.tabOthers.Controls.Add(Me.txtRatioLowerValue)
@@ -99,6 +103,82 @@ Partial Class frmSettings
         Me.tabOthers.TabIndex = 0
         Me.tabOthers.Text = "Others"
         Me.tabOthers.UseVisualStyleBackColor = True
+        '
+        'txtRatioUpperValue
+        '
+        Me.txtRatioUpperValue.Location = New System.Drawing.Point(192, 116)
+        Me.txtRatioUpperValue.Margin = New System.Windows.Forms.Padding(4)
+        Me.txtRatioUpperValue.Name = "txtRatioUpperValue"
+        Me.txtRatioUpperValue.Size = New System.Drawing.Size(201, 22)
+        Me.txtRatioUpperValue.TabIndex = 61
+        Me.txtRatioUpperValue.Tag = "Ratio Upper Value"
+        '
+        'lblRatioUpperValue
+        '
+        Me.lblRatioUpperValue.AutoSize = True
+        Me.lblRatioUpperValue.Location = New System.Drawing.Point(11, 119)
+        Me.lblRatioUpperValue.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.lblRatioUpperValue.Name = "lblRatioUpperValue"
+        Me.lblRatioUpperValue.Size = New System.Drawing.Size(124, 17)
+        Me.lblRatioUpperValue.TabIndex = 65
+        Me.lblRatioUpperValue.Text = "Ratio Upper Value"
+        '
+        'txtRatioLowerValue
+        '
+        Me.txtRatioLowerValue.Location = New System.Drawing.Point(192, 81)
+        Me.txtRatioLowerValue.Margin = New System.Windows.Forms.Padding(4)
+        Me.txtRatioLowerValue.Name = "txtRatioLowerValue"
+        Me.txtRatioLowerValue.Size = New System.Drawing.Size(201, 22)
+        Me.txtRatioLowerValue.TabIndex = 60
+        Me.txtRatioLowerValue.Tag = "Ratio Lower Value"
+        '
+        'lblRatioLowerValue
+        '
+        Me.lblRatioLowerValue.AutoSize = True
+        Me.lblRatioLowerValue.Location = New System.Drawing.Point(10, 84)
+        Me.lblRatioLowerValue.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.lblRatioLowerValue.Name = "lblRatioLowerValue"
+        Me.lblRatioLowerValue.Size = New System.Drawing.Size(123, 17)
+        Me.lblRatioLowerValue.TabIndex = 64
+        Me.lblRatioLowerValue.Text = "Ratio Lower Value"
+        '
+        'txtOptionStockParallelHit
+        '
+        Me.txtOptionStockParallelHit.Location = New System.Drawing.Point(192, 46)
+        Me.txtOptionStockParallelHit.Margin = New System.Windows.Forms.Padding(4)
+        Me.txtOptionStockParallelHit.Name = "txtOptionStockParallelHit"
+        Me.txtOptionStockParallelHit.Size = New System.Drawing.Size(201, 22)
+        Me.txtOptionStockParallelHit.TabIndex = 59
+        Me.txtOptionStockParallelHit.Tag = "Option Stock Parallel Hit"
+        '
+        'lblOptionStockParallelHit
+        '
+        Me.lblOptionStockParallelHit.AutoSize = True
+        Me.lblOptionStockParallelHit.Location = New System.Drawing.Point(10, 50)
+        Me.lblOptionStockParallelHit.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.lblOptionStockParallelHit.Name = "lblOptionStockParallelHit"
+        Me.lblOptionStockParallelHit.Size = New System.Drawing.Size(161, 17)
+        Me.lblOptionStockParallelHit.TabIndex = 63
+        Me.lblOptionStockParallelHit.Text = "Option Stock Parallel Hit"
+        '
+        'txtMainStockParallelHit
+        '
+        Me.txtMainStockParallelHit.Location = New System.Drawing.Point(192, 12)
+        Me.txtMainStockParallelHit.Margin = New System.Windows.Forms.Padding(4)
+        Me.txtMainStockParallelHit.Name = "txtMainStockParallelHit"
+        Me.txtMainStockParallelHit.Size = New System.Drawing.Size(201, 22)
+        Me.txtMainStockParallelHit.TabIndex = 58
+        Me.txtMainStockParallelHit.Tag = "Main Stock Parallel Hit"
+        '
+        'lblMainStockParallelHit
+        '
+        Me.lblMainStockParallelHit.AutoSize = True
+        Me.lblMainStockParallelHit.Location = New System.Drawing.Point(10, 15)
+        Me.lblMainStockParallelHit.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.lblMainStockParallelHit.Name = "lblMainStockParallelHit"
+        Me.lblMainStockParallelHit.Size = New System.Drawing.Size(149, 17)
+        Me.lblMainStockParallelHit.TabIndex = 62
+        Me.lblMainStockParallelHit.Text = "Main Stock Parallel Hit"
         '
         'tabStockSelection
         '
@@ -215,81 +295,24 @@ Partial Class frmSettings
         Me.lblMinPrice.TabIndex = 52
         Me.lblMinPrice.Text = "Minimum Price"
         '
-        'txtRatioUpperValue
+        'lblOnlyWithCurrentExpiryContract
         '
-        Me.txtRatioUpperValue.Location = New System.Drawing.Point(192, 116)
-        Me.txtRatioUpperValue.Margin = New System.Windows.Forms.Padding(4)
-        Me.txtRatioUpperValue.Name = "txtRatioUpperValue"
-        Me.txtRatioUpperValue.Size = New System.Drawing.Size(201, 22)
-        Me.txtRatioUpperValue.TabIndex = 61
-        Me.txtRatioUpperValue.Tag = "Ratio Upper Value"
+        Me.lblOnlyWithCurrentExpiryContract.AutoSize = True
+        Me.lblOnlyWithCurrentExpiryContract.Location = New System.Drawing.Point(10, 153)
+        Me.lblOnlyWithCurrentExpiryContract.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.lblOnlyWithCurrentExpiryContract.Name = "lblOnlyWithCurrentExpiryContract"
+        Me.lblOnlyWithCurrentExpiryContract.Size = New System.Drawing.Size(219, 17)
+        Me.lblOnlyWithCurrentExpiryContract.TabIndex = 66
+        Me.lblOnlyWithCurrentExpiryContract.Text = "Only With Current Expiry Contract"
         '
-        'lblRatioUpperValue
+        'chkbOnlyWithCurrentExpiryContract
         '
-        Me.lblRatioUpperValue.AutoSize = True
-        Me.lblRatioUpperValue.Location = New System.Drawing.Point(11, 119)
-        Me.lblRatioUpperValue.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
-        Me.lblRatioUpperValue.Name = "lblRatioUpperValue"
-        Me.lblRatioUpperValue.Size = New System.Drawing.Size(124, 17)
-        Me.lblRatioUpperValue.TabIndex = 65
-        Me.lblRatioUpperValue.Text = "Ratio Upper Value"
-        '
-        'txtRatioLowerValue
-        '
-        Me.txtRatioLowerValue.Location = New System.Drawing.Point(192, 81)
-        Me.txtRatioLowerValue.Margin = New System.Windows.Forms.Padding(4)
-        Me.txtRatioLowerValue.Name = "txtRatioLowerValue"
-        Me.txtRatioLowerValue.Size = New System.Drawing.Size(201, 22)
-        Me.txtRatioLowerValue.TabIndex = 60
-        Me.txtRatioLowerValue.Tag = "Ratio Lower Value"
-        '
-        'lblRatioLowerValue
-        '
-        Me.lblRatioLowerValue.AutoSize = True
-        Me.lblRatioLowerValue.Location = New System.Drawing.Point(10, 84)
-        Me.lblRatioLowerValue.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
-        Me.lblRatioLowerValue.Name = "lblRatioLowerValue"
-        Me.lblRatioLowerValue.Size = New System.Drawing.Size(123, 17)
-        Me.lblRatioLowerValue.TabIndex = 64
-        Me.lblRatioLowerValue.Text = "Ratio Lower Value"
-        '
-        'txtOptionStockParallelHit
-        '
-        Me.txtOptionStockParallelHit.Location = New System.Drawing.Point(192, 46)
-        Me.txtOptionStockParallelHit.Margin = New System.Windows.Forms.Padding(4)
-        Me.txtOptionStockParallelHit.Name = "txtOptionStockParallelHit"
-        Me.txtOptionStockParallelHit.Size = New System.Drawing.Size(201, 22)
-        Me.txtOptionStockParallelHit.TabIndex = 59
-        Me.txtOptionStockParallelHit.Tag = "Option Stock Parallel Hit"
-        '
-        'lblOptionStockParallelHit
-        '
-        Me.lblOptionStockParallelHit.AutoSize = True
-        Me.lblOptionStockParallelHit.Location = New System.Drawing.Point(10, 50)
-        Me.lblOptionStockParallelHit.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
-        Me.lblOptionStockParallelHit.Name = "lblOptionStockParallelHit"
-        Me.lblOptionStockParallelHit.Size = New System.Drawing.Size(161, 17)
-        Me.lblOptionStockParallelHit.TabIndex = 63
-        Me.lblOptionStockParallelHit.Text = "Option Stock Parallel Hit"
-        '
-        'txtMainStockParallelHit
-        '
-        Me.txtMainStockParallelHit.Location = New System.Drawing.Point(192, 12)
-        Me.txtMainStockParallelHit.Margin = New System.Windows.Forms.Padding(4)
-        Me.txtMainStockParallelHit.Name = "txtMainStockParallelHit"
-        Me.txtMainStockParallelHit.Size = New System.Drawing.Size(201, 22)
-        Me.txtMainStockParallelHit.TabIndex = 58
-        Me.txtMainStockParallelHit.Tag = "Main Stock Parallel Hit"
-        '
-        'lblMainStockParallelHit
-        '
-        Me.lblMainStockParallelHit.AutoSize = True
-        Me.lblMainStockParallelHit.Location = New System.Drawing.Point(10, 15)
-        Me.lblMainStockParallelHit.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
-        Me.lblMainStockParallelHit.Name = "lblMainStockParallelHit"
-        Me.lblMainStockParallelHit.Size = New System.Drawing.Size(149, 17)
-        Me.lblMainStockParallelHit.TabIndex = 62
-        Me.lblMainStockParallelHit.Text = "Main Stock Parallel Hit"
+        Me.chkbOnlyWithCurrentExpiryContract.AutoSize = True
+        Me.chkbOnlyWithCurrentExpiryContract.Location = New System.Drawing.Point(259, 153)
+        Me.chkbOnlyWithCurrentExpiryContract.Name = "chkbOnlyWithCurrentExpiryContract"
+        Me.chkbOnlyWithCurrentExpiryContract.Size = New System.Drawing.Size(18, 17)
+        Me.chkbOnlyWithCurrentExpiryContract.TabIndex = 67
+        Me.chkbOnlyWithCurrentExpiryContract.UseVisualStyleBackColor = True
         '
         'frmSettings
         '
@@ -334,4 +357,6 @@ Partial Class frmSettings
     Friend WithEvents lblMaxPrice As Label
     Friend WithEvents txtMinPrice As TextBox
     Friend WithEvents lblMinPrice As Label
+    Friend WithEvents lblOnlyWithCurrentExpiryContract As Label
+    Friend WithEvents chkbOnlyWithCurrentExpiryContract As CheckBox
 End Class

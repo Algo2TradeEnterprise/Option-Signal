@@ -14,4 +14,5 @@ Public Class SignalSettings
     Public Property OptionStockParallelHit As Integer
     Public Property RatioLowerValue As Decimal
     Public Property RatioUpperValue As Decimal
+    Public Property OnlyWithCurrentExpiryContracts As Boolean
 End Class

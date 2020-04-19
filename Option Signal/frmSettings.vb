@@ -14,6 +14,7 @@ Public Class frmSettings
             txtOptionStockParallelHit.Text = settings.OptionStockParallelHit
             txtRatioLowerValue.Text = settings.RatioLowerValue
             txtRatioUpperValue.Text = settings.RatioUpperValue
+            chkbOnlyWithCurrentExpiryContract.Checked = settings.OnlyWithCurrentExpiryContracts
         End If
     End Sub
 
@@ -40,6 +41,7 @@ Public Class frmSettings
         settings.OptionStockParallelHit = txtOptionStockParallelHit.Text
         settings.RatioLowerValue = txtRatioLowerValue.Text
         settings.RatioUpperValue = txtRatioUpperValue.Text
+        settings.OnlyWithCurrentExpiryContracts = chkbOnlyWithCurrentExpiryContract.Checked
 
         Utilities.Strings.SerializeFromCollection(Of SignalSettings)(SignalSettings.SettingsFilename, settings)
     End Sub

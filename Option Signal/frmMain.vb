@@ -444,7 +444,9 @@ Public Class frmMain
                         If cashStockList.ContainsKey(cashStockName) AndAlso atrStockList.ContainsKey(cashStockName) Then
                             Dim optionStockList As Dictionary(Of String, OptionInstrumentDetails) = Nothing
                             If runningStock.Value IsNot Nothing AndAlso runningStock.Value.Count > 0 Then
-                                For Each runningExpiry In runningStock.Value
+                                For Each runningExpiry In runningStock.Value.OrderBy(Function(x)
+                                                                                         Return x
+                                                                                     End Function)
                                     canceller.Token.ThrowIfCancellationRequested()
                                     Dim runningExpiryStockList As Dictionary(Of String, OptionInstrumentDetails) = Await GetOptionStockListAsync(runningStock.Key, tradingDate.Date, runningExpiry).ConfigureAwait(False)
                                     canceller.Token.ThrowIfCancellationRequested()
@@ -455,6 +457,7 @@ Public Class frmMain
                                             optionStockList.Add(runningExpiryStock.Key, runningExpiryStock.Value)
                                         Next
                                     End If
+                                    If settings.OnlyWithCurrentExpiryContracts Then Exit For
                                 Next
                             End If
                             canceller.Token.ThrowIfCancellationRequested()
