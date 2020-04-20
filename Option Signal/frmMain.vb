@@ -321,19 +321,8 @@ Public Class frmMain
         eFilterPopupShowingEventArgsCommon.Control.OkButton.ForeColor = eFilterPopupShowingEventArgsCommon.Control.CancelButton.ForeColor
     End Sub
 
-    Private Sub btnExport_Click(sender As Object, e As EventArgs) Handles btnExport.Click
-        If sfdgvMain IsNot Nothing AndAlso sfdgvMain.DataSource IsNot Nothing Then
-            Dim options = New ExcelExportingOptions()
-            Dim excelEngine = sfdgvMain.ExportToExcel(sfdgvMain.View, options)
-            Dim workBook = excelEngine.Excel.Workbooks(0)
-            Dim filename As String = Path.Combine(My.Application.Info.DirectoryPath, String.Format("Option Signal {0}.xlsx", Now.ToString("ddMMyyyy HH_mm_ss")))
-            workBook.SaveAs(filename)
-            If MessageBox.Show("Export successful. Do you want to open?", "Option Signal Export", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
-                Process.Start(filename)
-            End If
-        Else
-            MessageBox.Show("Can not export as there is no data", "Option Signal Export", MessageBoxButtons.OK, MessageBoxIcon.Hand)
-        End If
+    Private Async Sub btnExport_Click(sender As Object, e As EventArgs) Handles btnExport.Click
+        Await Task.Run(AddressOf ExportToExcelAsync).ConfigureAwait(False)
     End Sub
 
     Private Sub btnSettings_Click(sender As Object, e As EventArgs) Handles btnSettings.Click
@@ -544,6 +533,21 @@ Public Class frmMain
         End Try
     End Function
 
+    Private Async Function ExportToExcelAsync() As Task
+        Await Task.Delay(0).ConfigureAwait(False)
+        If sfdgvMain IsNot Nothing AndAlso sfdgvMain.DataSource IsNot Nothing Then
+            Dim options = New ExcelExportingOptions()
+            Dim excelEngine = sfdgvMain.ExportToExcel(sfdgvMain.View, options)
+            Dim workBook = excelEngine.Excel.Workbooks(0)
+            Dim filename As String = Path.Combine(My.Application.Info.DirectoryPath, String.Format("Option Signal {0}.xlsx", Now.ToString("ddMMyyyy HH_mm_ss")))
+            workBook.SaveAs(filename)
+            If MessageBox.Show("Export successful. Do you want to open?", "Option Signal Export", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+                Process.Start(filename)
+            End If
+        Else
+            MessageBox.Show("Can not export as there is no data", "Option Signal Export", MessageBoxButtons.OK, MessageBoxIcon.Hand)
+        End If
+    End Function
 
 #Region "Private Functions"
     Public Async Function GetFutureStockListAsync(ByVal tradingDate As Date) As Task(Of Dictionary(Of String, List(Of Date)))
