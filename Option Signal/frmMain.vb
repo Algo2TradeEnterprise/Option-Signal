@@ -417,10 +417,10 @@ Public Class frmMain
                     If Not runningFile.Contains(tradingDate.ToString("ddMMyyyy")) Then File.Delete(runningFile)
                 Next
                 Dim bannedStockList As List(Of String) = Nothing
-                Using bannedStock As New BannedStockDataFetcher(bannedStockFileName, canceller)
-                    'AddHandler bannedStock.Heartbeat, AddressOf OnHeartbeat
-                    bannedStockList = Await bannedStock.GetBannedStocksData(tradingDate).ConfigureAwait(False)
-                End Using
+                'Using bannedStock As New BannedStockDataFetcher(bannedStockFileName, canceller)
+                '    'AddHandler bannedStock.Heartbeat, AddressOf OnHeartbeat
+                '    bannedStockList = Await bannedStock.GetBannedStocksData(tradingDate).ConfigureAwait(False)
+                'End Using
 
                 canceller.Token.ThrowIfCancellationRequested()
                 OnHeartbeat("Getting ATR stock list. Please wait...")
