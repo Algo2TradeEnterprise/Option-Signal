@@ -238,7 +238,7 @@ Partial Class frmMain
         Me.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
         Me.Name = "frmMain"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "Signal Me"
+        Me.Text = "Option Signal"
         Me.grpHistoricalMode.ResumeLayout(False)
         Me.grpHistoricalMode.PerformLayout()
         CType(Me.sfdgvMain, System.ComponentModel.ISupportInitialize).EndInit()
