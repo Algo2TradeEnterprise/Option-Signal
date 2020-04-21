@@ -381,6 +381,8 @@ Public Class frmMain
 
     Private Async Function StartProcessingAsync() As Task
         Try
+            If GetRadioButtonChecked_ThreadSafe(rdbWithAPI) Then Throw New NotImplementedException
+
             OnHeartbeat("Validating user settings")
             Dim settings As SignalSettings = Nothing
             If File.Exists(SignalSettings.SettingsFilename) Then
